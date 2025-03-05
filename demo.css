@@ -1,0 +1,26 @@
+body
+{
+background-image:url('firedep.jpg');
+
+#mymenu
+{
+background-color:black;
+color:white;
+text-align: right;
+}
+#mymenu ul li
+{
+   display:inline-block;
+   padding:20px; 
+}
+
+#mymenu ul li:hover
+{
+display:inline-block;
+padding:20px;
+background:white;
+color:black;
+}
+
+
+}
