@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Department Automation System</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #FFA500 0%, #FFFFFF 100%); /* Orange to white gradient */
+            color: #2E0000; /* Deep red text */
+            overflow-x: hidden;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to right, #8B0000, #FF4500); /* Dark red to orange gradient */
+            padding: 20px 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .navbar .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #FFD700; /* Gold color on hover */
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .main-content h1 {
+            font-size: 56px;
+            margin-bottom: 30px;
+            color: #8B0000; /* Deep red color for heading */
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5); /* White text shadow for contrast */
+        }
+
+        .main-content .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .main-content .buttons a {
+            text-decoration: none;
+            background-color: #FF4500; /* Orange background for buttons */
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 20px;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-content .buttons a:hover {
+            background-color: #8B0000; /* Darker red on hover */
+            transform: translateY(-5px);
+        }
+
+        /* About Us Section (Hidden by Default) */
+        .about-content, .faqs-content, .features-content {
+            display: none;
+            padding: 40px;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            border-radius: 10px;
+            margin: 40px auto;
+            max-width: 800px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .about-content h1, .faqs-content h1, .features-content h1 {
+            font-size: 48px;
+            color: #8B0000; /* Deep red color for heading */
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+            margin-bottom: 30px;
+        }
+
+        .about-content h2, .faqs-content h2, .features-content h2 {
+            font-size: 36px;
+            color: #FF4500; /* Orange color for subheading */
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .about-content p, .faqs-content p, .features-content p {
+            font-size: 20px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #2E0000; /* Deep red text */
+        }
+
+        .about-content .team-member, .features-content .feature-item {
+            background-color: rgba(255, 69, 0, 0.1); /* Semi-transparent orange background */
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .about-content .team-member h3, .features-content .feature-item h3 {
+            font-size: 24px;
+            color: #8B0000; /* Deep red color for team member name */
+            margin-bottom: 10px;
+        }
+
+        .about-content .team-member p, .features-content .feature-item p {
+            font-size: 18px;
+            margin: 5px 0;
+            color: #2E0000; /* Deep red text */
+        }
+
+        /* FAQs Section Styles */
+        .faqs-content .faq-item {
+            background-color: rgba(255, 69, 0, 0.1); /* Semi-transparent orange background */
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .faqs-content .faq-item h3 {
+            font-size: 24px;
+            color: #8B0000; /* Deep red color for question */
+            margin-bottom: 10px;
+        }
+
+        .faqs-content .faq-item p {
+            font-size: 18px;
+            margin: 5px 0;
+            color: #2E0000; /* Deep red text */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px;
+            }
+
+            .navbar .nav-links {
+                gap: 15px;
+                margin-top: 10px;
+            }
+
+            .main-content h1 {
+                font-size: 36px;
+            }
+
+            .main-content .buttons a {
+                padding: 15px 30px;
+                font-size: 18px;
+            }
+
+            .about-content, .faqs-content, .features-content {
+                padding: 20px;
+            }
+
+            .about-content h1, .faqs-content h1, .features-content h1 {
+                font-size: 36px;
+            }
+
+            .about-content h2, .faqs-content h2, .features-content h2 {
+                font-size: 28px;
+            }
+
+            .about-content p, .faqs-content p, .features-content p {
+                font-size: 16px;
+            }
+
+            .about-content .team-member h3, .features-content .feature-item h3 {
+                font-size: 20px;
+            }
+
+            .about-content .team-member p, .features-content .feature-item p {
+                font-size: 16px;
+            }
+
+            .faqs-content .faq-item h3 {
+                font-size: 20px;
+            }
+
+            .faqs-content .faq-item p {
+                font-size: 16px;
+            }
+        }
+    </style>
+    <!-- GSAP Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">Fire Automation</div>
+        <div class="nav-links">
+            <a href="#" id="homeLink">Home</a>
+            <a href="#" id="aboutLink">About Us</a>
+            <a href="#" id="faqsLink">FAQs</a>
+            <a href="#" id="featuresLink">Features</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <h1>Fire Department Automation System</h1>
+        <div class="buttons">
+            <a href="final.html">Administrator</a>
+            <a href="problem.html">User</a>
+        </div>
+    </div>
+
+    <!-- About Us Content (Hidden by Default) -->
+    <div class="about-content" id="aboutContent">
+        <h1>About Us</h1>
+        <h2>Team Name: 4_ace</h2>
+
+        <!-- Team Member 1 -->
+        <div class="team-member">
+            <h3>Ansh Raghuwanshi</h3>
+            <p><strong>College Name:</strong> SVVV</p>
+            <p><strong>Stream:</strong> Computer Science</p>
+            <p><strong>Year of Graduation:</strong> 2027</p>
+        </div>
+
+        <!-- Team Member 2 -->
+        <div class="team-member">
+            <h3>Anjali Jain</h3>
+            <p><strong>College Name:</strong> SVVV</p>
+            <p><strong>Stream:</strong> Computer Science</p>
+            <p><strong>Year of Graduation:</strong> 2027</p>
+        </div>
+
+        <!-- Team Member 3 -->
+        <div class="team-member">
+            <h3>Aditya Tiwari</h3>
+            <p><strong>College Name:</strong> SVVV</p>
+            <p><strong>Stream:</strong> Computer Science</p>
+            <p><strong>Year of Graduation:</strong> 2027</p>
+        </div>
+
+        <!-- Team Member 4 -->
+        <div class="team-member">
+            <h3>Abhay Singh Rajawat</h3>
+            <p><strong>College Name:</strong> SVVV</p>
+            <p><strong>Stream:</strong> Computer Science</p>
+            <p><strong>Year of Graduation:</strong> 2027</p>
+        </div>
+    </div>
+
+    <!-- FAQs Content (Hidden by Default) -->
+    <div class="faqs-content" id="faqsContent">
+        <h1>FAQs</h1>
+        <h2>Frequently Asked Questions</h2>
+
+        <!-- FAQ Item 1 -->
+        <div class="faq-item">
+            <h3>Q1: What is the Fire Department Automation System?</h3>
+            <p><strong>A1:</strong> The Fire Department Automation System is a comprehensive platform designed to streamline and automate fire department operations, including incident reporting, resource management, and emergency response coordination.</p>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="faq-item">
+            <h3>Q2: How does this system improve emergency response times?</h3>
+            <p><strong>A2:</strong> The system uses real-time data and automated workflows to ensure faster dispatch of resources, accurate incident tracking, and efficient communication between teams, significantly reducing response times.</p>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="faq-item">
+            <h3>Q3: Can I access the system from my mobile device?</h3>
+            <p><strong>A3:</strong> Yes, the system is fully responsive and can be accessed from any device, including smartphones, tablets, and desktops, ensuring you stay connected on the go.</p>
+        </div>
+
+        <!-- FAQ Item 4 -->
+        <div class="faq-item">
+            <h3>Q4: Is my data secure with this system?</h3>
+            <p><strong>A4:</strong> Absolutely. The system employs advanced encryption protocols and follows industry-standard security practices to ensure your data is protected at all times.</p>
+        </div>
+
+        <!-- FAQ Item 5 -->
+        <div class="faq-item">
+            <h3>Q5: How can I report an issue or suggest a feature?</h3>
+            <p><strong>A5:</strong> You can report issues or suggest new features by contacting our support team through the "Contact Us" section on the Features page.</p>
+        </div>
+
+        <!-- FAQ Item 6 -->
+        <div class="faq-item">
+            <h3>Q6: What kind of training is required to use this system?</h3>
+            <p><strong>A6:</strong> The system is designed to be user-friendly, and we provide comprehensive training materials, including video tutorials and documentation, to help you get started quickly.</p>
+        </div>
+
+        <!-- FAQ Item 7 -->
+        <div class="faq-item">
+            <h3>Q7: Can the system integrate with existing fire department tools?</h3>
+            <p><strong>A7:</strong> Yes, the system is designed to integrate seamlessly with existing tools and software used by fire departments, ensuring a smooth transition and enhanced functionality.</p>
+        </div>
+    </div>
+
+    <!-- Features Content (Hidden by Default) -->
+    <div class="features-content" id="featuresContent">
+        <h1>Features</h1>
+        <h2>Key Features of the Fire Department Automation System</h2>
+
+        <!-- Feature 1 -->
+        <div class="feature-item">
+            <h3>Real-Time Incident Reporting</h3>
+            <p>Efficiently report and track fire incidents in real-time, ensuring quick response and accurate data collection.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-item">
+            <h3>Resource Management</h3>
+            <p>Manage firefighting resources such as vehicles, equipment, and personnel with ease, ensuring optimal utilization.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-item">
+            <h3>Automated Dispatch System</h3>
+            <p>Automatically dispatch the nearest available resources to the incident location, reducing response times.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-item">
+            <h3>Interactive Maps</h3>
+            <p>Visualize incidents and resources on interactive maps for better situational awareness and decision-making.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-item">
+            <h3>Mobile Accessibility</h3>
+            <p>Access the system on the go with a fully responsive design compatible with smartphones, tablets, and desktops.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="feature-item">
+            <h3>Data Analytics</h3>
+            <p>Analyze historical data and generate reports to identify trends and improve operational efficiency.</p>
+        </div>
+
+        <!-- Feature 7 -->
+        <div class="feature-item">
+            <h3>Integration with Existing Tools</h3>
+            <p>Seamlessly integrate with existing fire department software and tools for enhanced functionality.</p>
+        </div>
+
+        <!-- Feature 8 -->
+        <div class="feature-item">
+            <h3>User-Friendly Interface</h3>
+            <p>An intuitive and easy-to-use interface designed for quick adoption and minimal training requirements.</p>
+        </div>
+    </div>
+
+    <script>
+        // GSAP Animations
+        gsap.from(".navbar", { duration: 1, y: -100, opacity: 0, ease: "power3.out" });
+        gsap.from(".main-content h1", { duration: 1, y: 50, opacity: 0, delay: 0.5, ease: "power3.out" });
+        gsap.from(".buttons a", { duration: 1, y: 50, opacity: 0, stagger: 0.2, delay: 1, ease: "power3.out" });
+
+        // Function to hide all content sections except the one specified
+        function showContent(contentId) {
+            const sections = ["mainContent", "aboutContent", "faqsContent", "featuresContent"];
+            sections.forEach(section => {
+                if (section === contentId) {
+                    document.getElementById(section).style.display = "block";
+                    gsap.from(`#${section}`, { duration: 1, opacity: 0, y: 50, ease: "power3.out" });
+                } else {
+                    document.getElementById(section).style.display = "none";
+                }
+            });
+        }
+
+        // Event listeners for navigation links
+        document.getElementById("homeLink").addEventListener("click", function (e) {
+            e.preventDefault();
+            showContent("mainContent");
+        });
+
+        document.getElementById("aboutLink").addEventListener("click", function (e) {
+            e.preventDefault();
+            showContent("aboutContent");
+        });
+
+        document.getElementById("faqsLink").addEventListener("click", function (e) {
+            e.preventDefault();
+            showContent("faqsContent");
+        });
+
+        document.getElementById("featuresLink").addEventListener("click", function (e) {
+            e.preventDefault();
+            showContent("featuresContent");
+        });
+    </script>
+</body>
+</html>
