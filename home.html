@@ -3,163 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FDMS </title>
     <link rel="stylesheet" href="demo.css"/>
-    <title>Fire Department Monitoring System</title>
-    
 </head>
 <body>
-    <nav class="sidebar">
-        <div class="logo">FDMS</div>
-        <ul class="nav-list">
-            <li class="nav-item">
-                <a href="dashboard.html" class="nav-link" onclick="showSection('dashboard')">Dashboard</a>
-            </li>
-            <li class="nav-item">
-                <a href="incidents.html" class="nav-link" onclick="showSection('incidents')">Incidents</a>
-            </li>
-            <li class="nav-item">
-                <a href="inspection.html" class="nav-link" onclick="showSection('inspections')">Inspections</a>
-            </li>
-        </ul>
-    </nav>
-
-    <main class="   ">
-        <!-- Dashboard Section -->
-        <section id="dashboard">
-            <div class="header">
-                <h1>Operations Dashboard</h1>
-                <div class="notifications">🔔 <span id="notification-count">0</span></div>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Active Incidents</h3>
-                    <p class="stat-number" id="active-incidents">0</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Resolved Today</h3>
-                    <p class="stat-number" id="resolved-incidents">0</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Avg Response Time</h3>
-                    <p class="stat-number" id="avg-response">0m</p>
-                </div>
-            </div>
-
-            <div class="incidents-list">
-                <h3>Recent Incidents</h3>
-                <div id="incidents-container"></div>
-            </div>
-        </section>
-
-        <!-- Incidents Section -->
-        <section id="incidents" class="hidden">
-            <div class="header">
-                <h1>Incident Management</h1>
-            </div>
-
-            <div class="form-container">
-                <h2>Report New Incident</h2>
-                <form id="incidentForm" onsubmit="handleIncidentSubmit(event)">
-                    <div class="form-group">
-                        <label for="incidentType">Incident Type:</label>
-                        <select id="incidentType" required>
-                            <option value="">Select type</option>
-                            <option value="Fire">Fire</option>
-                            <option value="Medical">Medical</option>
-                            <option value="Rescue">Rescue</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="location">Location:</label>
-                        <input type="text" id="location" required>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Report Incident</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- Inspections Section -->
-        <section id="inspections" class="hidden">
-            <div class="header">
-                <h1>Inspections Management</h1>
-            </div>
-            <!-- Inspection form would go here -->
-        </section>
-    </main>
-
-    <script>
-        // Sample initial data
-        let incidents = [
-            { id: 1, type: 'Fire', location: 'Main St', status: 'Active', timestamp: '2023-08-01' },
-            { id: 2, type: 'Medical', location: 'Oak Ave', status: 'Resolved', timestamp: '2023-08-01' }
-        ];
-
-        // Section visibility control
-        function showSection(sectionId) {
-            document.querySelectorAll('section').forEach(section => {
-                section.classList.add('hidden');
-            });
-            document.getElementById(sectionId).classList.remove('hidden');
-        }
-
-        // Incident form handling
-        function handleIncidentSubmit(event) {
-            event.preventDefault();
-            
-            const newIncident = {
-                id: incidents.length + 1,
-                type: document.getElementById('incidentType').value,
-                location: document.getElementById('location').value,
-                status: 'Active',
-                timestamp: new Date().toISOString().split('T')[0]
-            };
-
-            incidents.push(newIncident);
-            updateDashboard();
-            event.target.reset();
-            showSection('dashboard');
-        }
-
-        // Dashboard updates
-        function updateDashboard() {
-            // Update stats
-            const active = incidents.filter(i => i.status === 'Active').length;
-            const resolved = incidents.filter(i => i.status === 'Resolved').length;
-            
-            document.getElementById('active-incidents').textContent = active;
-            document.getElementById('resolved-incidents').textContent = resolved;
-            document.getElementById('avg-response').textContent = 
-                calculateAverageResponse() + 'm';
-
-            // Update incidents list
-            const container = document.getElementById('incidents-container');
-            container.innerHTML = incidents.map(incident => `
-                <div class="incident-card">
-                    <span class="status-dot ${incident.status.toLowerCase()}"></span>
-                    <div class="incident-info">
-                        <h4>${incident.type}</h4>
-                        <p>${incident.location}</p>
-                    </div>
-                    <span class="status-badge">${incident.status}</span>
-                </div>
-            `).join('');
-        }
-
-        function calculateAverageResponse() {
-            // Simplified calculation
-            return incidents.length > 0 
-                ? (incidents.length * 1.2).toFixed(1)
-                : '0.0';
-        }
-
-        // Initial setup
-        document.addEventListener('DOMContentLoaded', () => {
-            updateDashboard();
-            showSection('dashboard');
-        });
-    </script>
+    <header>
+        <h1>FDMS</h1>
+        <nav>
+            <a href="#">About Us</a>
+            <a href="#">Benefits</a>
+            <a href="#">Features</a>
+            <a href="#">Live Chart</a>
+            <a href="#">Contact</a>
+            <a href="#">Log In</a>
+            <a href="#" style="background-color: #4CAF50; color: white; padding: 10px; border-radius: 5px;">Sign Up</a>
+        </nav>
+    </header>
+    <div class="container">
+        <img src="fire.jpg" width="200" height="200" border="1">
+    </div>
 </body>
 </html>
