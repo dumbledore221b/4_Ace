@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fire Department Admin Dashboard</title>
+  <style>
+    :root {
+      --primary-color: #c62828;
+      --secondary-color: #f5f5f5;
+      --sidebar-width: 250px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: #2c3e50;
+      color: white;
+      padding: 20px;
+      position: fixed;
+      height: 100%;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+
+    .nav-list {
+      list-style: none;
+    }
+
+    .nav-item {
+      margin: 15px 0;
+      position: relative; /* For notification count */
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      display: block;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+
+    .nav-link:hover {
+      background: #34495e;
+    }
+
+    /* Notification Count in Sidebar */
+    .notification-count {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: red;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 30px;
+      background: var(--secondary-color);
+      min-height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    /* Notification Icon in Header */
+    .notifications {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .notifications .notification-count {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: red;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-number {
+      font-size: 32px;
+      color: var(--primary-color);
+      margin: 10px 0;
+    }
+
+    /* Incidents List */
+    .incidents-list {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .incident-card {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      margin: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 15px;
+    }
+
+    .status-dot.active { background: #c62828; }
+    .status-dot.resolved { background: #2e7d32; }
+
+    /* Form Styles */
+    .form-container {
+      max-width: 600px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+    }
+
+    .btn.reject {
+      margin-left: 10px; /* Spacing between Accept and Reject buttons */
+    }
+
+    /* Hidden class for tab switching */
+    .hidden {
+      display: none;
+    }
+
+    /* Map Container Styles */
+    .map-container {
+      margin-top: 20px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 400px;
+      border: 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .map-container iframe {
+        height: 300px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="logo">FDMS</div>
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a href="#" class="nav-link" onclick="showSection('dashboard')">
+          Dashboard
+          <span class="notification-count" id="dashboard-notification">0</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" onclick="showSection('incident-requests')">
+          Incident Requests
+          <span class="notification-count" id="incident-notification">2</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" onclick="showSection('noc-requests')">
+          NOC Requests
+          <span class="notification-count" id="noc-notification">1</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" onclick="showSection('accident-info')">
+          Accident Info
+          <span class="notification-count" id="accident-notification">0</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" onclick="showSection('alert-section')">
+          Send Alerts
+          <span class="notification-count" id="alert-notification">0</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <!-- Dashboard Section -->
+    <section id="dashboard">
+      <div class="header">
+        <h1>Operations Dashboard</h1>
+        <div class="notifications" onclick="showNotifications()">
+          🔔
+          <span class="notification-count" id="notification-count">2</span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Active Incidents</h3>
+          <p class="stat-number" id="active-incidents">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Resolved Today</h3>
+          <p class="stat-number" id="resolved-incidents">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Avg Response Time</h3>
+          <p class="stat-number" id="avg-response">0m</p>
+        </div>
+      </div>
+
+      <div class="incidents-list">
+        <h3>Recent Incidents</h3>
+        <div id="incidents-container"></div>
+      </div>
+    </section>
+
+    <!-- Incident Requests Section -->
+    <section id="incident-requests" class="hidden">
+      <div class="header">
+        <h1>Incident Requests</h1>
+      </div>
+
+      <div class="form-container">
+        <h2>Manage Incident Requests</h2>
+        <div class="request-list">
+          <div class="incident-card">
+            <span class="status-dot active"></span>
+            <div class="incident-info">
+              <h4>Fire</h4>
+              <p>Main Street</p>
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" onclick="acceptRequest('001')">Accept</button>
+              <button class="btn btn-primary reject" onclick="rejectRequest('001')">Reject</button>
+            </div>
+          </div>
+          <!-- Add more incident cards dynamically -->
+        </div>
+
+        <!-- Map Integration -->
+        <div class="map-container">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117763.55665924384!2d75.78127673497889!3d22.72410989334023!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3962fcad1b410ddb%3A0x96ec4da356240f4!2sIndore%2C%20Madhya%20Pradesh!5e0!3m2!1sen!2sin!4v1741144290823!5m2!1sen!2sin"
+            width="600"
+            height="450"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOC Requests Section -->
+    <section id="noc-requests" class="hidden">
+      <div class="header">
+        <h1>NOC Requests</h1>
+      </div>
+
+      <div class="form-container">
+        <h2>Manage NOC Requests</h2>
+        <div class="request-list">
+          <div class="incident-card">
+            <span class="status-dot active"></span>
+            <div class="incident-info">
+              <h4>John Doe</h4>
+              <p>NOC for Building Construction</p>
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" onclick="approveNOC('002')">Approve</button>
+              <button class="btn btn-primary reject" onclick="rejectNOC('002')">Reject</button>
+            </div>
+          </div>
+          <!-- Add more NOC request cards dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Accident Information Section -->
+    <section id="accident-info" class="hidden">
+      <div class="header">
+        <h1>Accident Information</h1>
+      </div>
+
+      <div class="form-container">
+        <h2>Manage Accident Information</h2>
+        <div class="accident-list">
+          <div class="incident-card">
+            <span class="status-dot resolved"></span>
+            <div class="incident-info">
+              <h4>Downtown</h4>
+              <p>Accident resolved at 10:00 AM.</p>
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" onclick="viewAccidentDetails('003')">Details</button>
+            </div>
+          </div>
+          <!-- Add more accident cards dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Alert Section -->
+    <section id="alert-section" class="hidden">
+      <div class="header">
+        <h1>Send Alerts</h1>
+      </div>
+
+      <div class="form-container">
+        <h2>Send Alert to Users</h2>
+        <div class="alert-list">
+          <div class="form-group">
+            <label for="alert-message">Alert Message:</label>
+            <textarea id="alert-message" placeholder="Enter alert message..."></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="sendAlert()">Send Alert</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Function to show/hide sections
+    function showSection(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('section').forEach(section => {
+        section.classList.add('hidden');
+      });
+
+      // Show the selected section
+      document.getElementById(sectionId).classList.remove('hidden');
+    }
+
+    // Function to show notifications
+    function showNotifications() {
+      alert("You have 2 new incident requests!");
+    }
+
+    // Incident Requests Functions
+    function acceptRequest(requestId) {
+      alert(`Request ${requestId} accepted.`);
+      // Add logic to update request status
+    }
+
+    function rejectRequest(requestId) {
+      alert(`Request ${requestId} rejected.`);
+      // Add logic to update request status
+    }
+
+    // NOC Requests Functions
+    function approveNOC(requestId) {
+      alert(`NOC Request ${requestId} approved.`);
+      // Add logic to update NOC status
+    }
+
+    function rejectNOC(requestId) {
+      alert(`NOC Request ${requestId} rejected.`);
+      // Add logic to update NOC status
+    }
+
+    // Accident Information Functions
+    function viewAccidentDetails(accidentId) {
+      alert(`Viewing details for Accident ${accidentId}.`);
+      // Add logic to display accident details
+    }
+
+    // Alert Section Function
+    function sendAlert() {
+      const alertMessage = document.getElementById('alert-message').value;
+      if (alertMessage) {
+        alert(`Alert sent: ${alertMessage}`);
+        // Add logic to send alert to users
+      } else {
+        alert('Please enter an alert message.');
+      }
+    }
+
+    // Default show Dashboard section
+    showSection('dashboard');
+  </script>
+</body>
+</html>
